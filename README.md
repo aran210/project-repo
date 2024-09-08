@@ -1,10 +1,13 @@
- # Meta Llama 3
+# Project Repo
 
-We are unlocking the power of large language models. Our latest version of Llama is now accessible to individuals, creators, researchers, and businesses of all sizes so that they can experiment, innovate, and scale their ideas responsibly.
+This repo contains the files used to conduct the experiments throughout the project.
+JTT includes JTT files.
+BASS includes BASS files.
 
-This release includes model weights and starting code for pre-trained and instruction tuned Llama 3 language models — including sizes of 8B to 70B parameters.
+The files outside these folders are either from the original Meta repo for LLaMA 3 - this project started with that. We keep the instructions below for you to be able to run the pre-trained model if you wish. This is how we obtained base model results.
 
-This repository is intended as a minimal example to load Llama 3 models and run inference. For more detailed examples, see [llama-recipes](https://github.com/facebookresearch/llama-recipes/).
+A lot of the files are redundant but demostrate some of the testing not shown in the report or presentation. I have kept quite a lot (although not the results as there were hundreds of messy files).
+
 
 ## Download
 
