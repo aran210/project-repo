@@ -1,0 +1,30 @@
+#!/bin/bash
+#SBATCH --gres=gpu:teslaa40:1
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=au123
+
+
+cd /vol/bitbucket/au123/projectenv && source bin/activate && cd llama3
+
+cd ./BASS
+
+
+# Redirect all output and errors to a log file
+exec > >(tee -a 101_to_121_logfile.log) 2>&1
+
+
+
+torchrun --nproc_per_node 1 bias_model_train.py --ckpt_dir Meta-Llama-3-8B-Instruct/ --tokenizer_path Meta-Llama-3-8B-Instruct/tokenizer.model --max_seq_len 2048 --max_batch_size 2 --num_training_samples 20000 --num_epochs 2 --is_snli False --is_paft False --inc_premise True --lr 2e-04
+
+torchrun --nproc_per_node 1 bias_model_identification.py --ckpt_dir Meta-Llama-3-8B-Instruct/ --tokenizer_path Meta-Llama-3-8B-Instruct/tokenizer.model --max_seq_len 2048 --max_batch_size 3 --num_training_samples 20000 --is_snli False --is_paft False --inc_premise True --start_index 0 --num_run 115
+
+torchrun --nproc_per_node 1 final_model_train_custom.py --max_batch_size 3 --num_training_samples 20000 --is_snli False --is_paft False --inc_bias True --num_epochs 3 --upsample_factor 1 --lr 2e-05 --start_index 0 --num_run 115 --multiplier 0.8 --dec_biased True --inc_unbiased True --balance_classes False
+
+torchrun --nproc_per_node 1 final_model_validation.py --ckpt_dir Meta-Llama-3-8B-Instruct/ --tokenizer_path Meta-Llama-3-8B-Instruct/tokenizer.model --max_seq_len 2048 --max_batch_size 3 --is_snli False --is_paft False --num_run 115
+
+torchrun --nproc_per_node 1 final_model_test.py --ckpt_dir Meta-Llama-3-8B-Instruct/ --tokenizer_path Meta-Llama-3-8B-Instruct/tokenizer.model --max_seq_len 2048 --max_batch_size 3 --is_snli False --is_paft False --num_run 115
+
+git add .
+git commit -m "Run 115 - MNLI, 20K samples, Upsample = 1x, LR = 2e-04/2e-05, Epochs = 2/3, multiplier=0.8, dec_bias, inc_unbias"
+git push
+

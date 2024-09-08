@@ -1,0 +1,184 @@
+#!/bin/bash
+#SBATCH --gres=gpu:teslaa40:1
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=au123
+
+
+cd /vol/bitbucket/au123/projectenv && source bin/activate && cd llama3
+
+cd ./PoE-ER
+
+
+# Redirect all output and errors to a log file
+exec > >(tee -a baselines_1_to_7.log) 2>&1
+
+
+# torchrun --nproc_per_node 1 baseline_test.py -is_snli True --is_paft False --num_run 0 --is_base_model True
+
+# git add .
+# git commit -m "Baseline Run 0, BASE MODEL"
+# git push
+
+
+torchrun --nproc_per_node 1 baseline_train.py --max_batch_size 1 --num_training_samples 20000 --is_snli True --is_paft False--num_epochs 3 --lr 2e-05 --start_index 0 --num_run 6 --is_shuffle False --seed 42
+
+torchrun --nproc_per_node 1 baseline_test.py -is_snli True --is_paft False --num_run 6
+
+git add .
+git commit -m "Baseline Run 6, SNLI, 20K samples, No Shuffle, 2e-05, 3 Epochs"
+git push
+
+
+
+
+
+torchrun --nproc_per_node 1 baseline_train.py --max_batch_size 4 --num_training_samples 10000 --is_snli True --is_paft False--num_epochs 3 --lr 2e-04 --start_index 0 --num_run 1 --is_shuffle False --seed 42
+
+torchrun --nproc_per_node 1 baseline_test.py -is_snli True --is_paft False --num_run 1
+
+git add .
+git commit -m "Baseline Run 1, SNLI, 10K samples, No Shuffle, 2e-04, 3 Epochs"
+git push
+
+
+
+
+torchrun --nproc_per_node 1 baseline_train.py --max_batch_size 3 --num_training_samples 20000 --is_snli False --is_paft False--num_epochs 3 --lr 2e-04 --start_index 0 --num_run 1 --is_shuffle False --seed 42
+
+torchrun --nproc_per_node 1 baseline_test.py -is_snli False --is_paft False --num_run 1
+
+git add .
+git commit -m "Baseline Run 1, MNLI, 20K samples, No Shuffle, 2e-04, 3 Epochs"
+git push
+
+
+
+
+
+
+
+
+torchrun --nproc_per_node 1 baseline_train.py --max_batch_size 4 --num_training_samples 10000 --is_snli True --is_paft False--num_epochs 3 --lr 2e-05 --start_index 0 --num_run 2 --is_shuffle False --seed 42
+
+torchrun --nproc_per_node 1 baseline_test.py -is_snli True --is_paft False --num_run 2
+
+git add .
+git commit -m "Baseline Run 2, SNLI, 10K samples, No Shuffle, 2e-05, 3 Epochs"
+git push
+
+
+
+
+torchrun --nproc_per_node 1 baseline_train.py --max_batch_size 3 --num_training_samples 20000 --is_snli False --is_paft False--num_epochs 3 --lr 2e-05 --start_index 0 --num_run 2 --is_shuffle False --seed 42
+
+torchrun --nproc_per_node 1 baseline_test.py -is_snli False --is_paft False --num_run 2
+
+git add .
+git commit -m "Baseline Run 2, MNLI, 20K samples, No Shuffle, 2e-05, 3 Epochs"
+git push
+
+
+
+
+
+
+
+
+
+torchrun --nproc_per_node 1 baseline_train.py --max_batch_size 4 --num_training_samples 10000 --is_snli True --is_paft False--num_epochs 3 --lr 2e-05 --start_index 0 --num_run 3 --is_shuffle True --seed 1
+
+torchrun --nproc_per_node 1 baseline_test.py -is_snli True --is_paft False --num_run 3
+
+git add .
+git commit -m "Baseline Run 3, SNLI, 10K samples, No Shuffle, 2e-05, 3 Epochs"
+git push
+
+
+
+
+torchrun --nproc_per_node 1 baseline_train.py --max_batch_size 3 --num_training_samples 20000 --is_snli False --is_paft False--num_epochs 3 --lr 2e-05 --start_index 0 --num_run 3 --is_shuffle True --seed 1
+
+torchrun --nproc_per_node 1 baseline_test.py -is_snli False --is_paft False --num_run 3
+
+git add .
+git commit -m "Baseline Run 3, MNLI, 20K samples, No Shuffle, 2e-05, 3 Epochs"
+git push
+
+
+
+
+
+
+
+
+
+
+torchrun --nproc_per_node 1 baseline_train.py --max_batch_size 4 --num_training_samples 10000 --is_snli True --is_paft False--num_epochs 3 --lr 2e-05 --start_index 0 --num_run 4 --is_shuffle True --seed 2
+
+torchrun --nproc_per_node 1 baseline_test.py -is_snli True --is_paft False --num_run 4
+
+git add .
+git commit -m "Baseline Run 4, SNLI, 10K samples, Shuffle Seed 1, 2e-05, 3 Epochs"
+git push
+
+
+
+
+torchrun --nproc_per_node 1 baseline_train.py --max_batch_size 3 --num_training_samples 20000 --is_snli False --is_paft False--num_epochs 3 --lr 2e-05 --start_index 0 --num_run 4 --is_shuffle True --seed 2
+
+torchrun --nproc_per_node 1 baseline_test.py -is_snli False --is_paft False --num_run 4
+
+git add .
+git commit -m "Baseline Run 4, MNLI, 20K samples,Shuffle Seed 2, 2e-05, 3 Epochs"
+git push
+
+
+
+
+
+
+
+
+torchrun --nproc_per_node 1 baseline_train.py --max_batch_size 1 --num_training_samples 30000 --is_snli True --is_paft False--num_epochs 3 --lr 2e-05 --start_index 0 --num_run 5 --is_shuffle False --seed 42
+
+torchrun --nproc_per_node 1 baseline_test.py -is_snli True --is_paft False --num_run 5
+
+git add .
+git commit -m "Baseline Run 5, SNLI, 30K samples, No Shuffle, 2e-05, 3 Epochs"
+git push
+
+
+
+
+torchrun --nproc_per_node 1 baseline_train.py --max_batch_size 1 --num_training_samples 30000 --is_snli False --is_paft False--num_epochs 3 --lr 2e-05 --start_index 0 --num_run 5 --is_shuffle False --seed 42
+
+torchrun --nproc_per_node 1 baseline_test.py -is_snli False --is_paft False --num_run 5
+
+git add .
+git commit -m "Baseline Run 5, MNLI, 30K samples, No Shuffle, 2e-05, 3 Epochs"
+git push
+
+
+
+
+
+
+
+torchrun --nproc_per_node 1 baseline_train.py --max_batch_size 4 --num_training_samples 10000 --is_snli True --is_paft False--num_epochs 3 --lr 2e-06 --start_index 0 --num_run 7 --is_shuffle True --seed 42
+
+torchrun --nproc_per_node 1 baseline_test.py -is_snli True --is_paft False --num_run 7
+
+git add .
+git commit -m "Baseline Run 7, SNLI, 10K samples, Shuffle Seed 42, 2e-06, 3 Epochs"
+git push
+
+
+
+
+torchrun --nproc_per_node 1 baseline_train.py --max_batch_size 3 --num_training_samples 20000 --is_snli False --is_paft False--num_epochs 3 --lr 2e-06 --start_index 0 --num_run 7 --is_shuffle True --seed 42
+
+torchrun --nproc_per_node 1 baseline_test.py -is_snli False --is_paft False --num_run 7
+
+git add .
+git commit -m "Baseline Run 7, MNLI, 20K samples, Shuffle Seed 42, 2e-06, 3 Epochs"
+git push

@@ -1,0 +1,31 @@
+#!/bin/bash
+#SBATCH --gres=gpu:teslaa40:1
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=au123
+
+
+cd /vol/bitbucket/au123/projectenv && source bin/activate && cd llama3
+
+cd ./BASS
+
+
+# Redirect all output and errors to a log file
+exec > >(tee -a 82_85_to_96_logfile.log) 2>&1
+
+
+
+
+torchrun --nproc_per_node 1 final_model_train_custom.py --max_batch_size 3 --num_training_samples 10000 --is_snli True --is_paft False --inc_bias True --num_epochs 3 --upsample_factor 1 --lr 2e-05 --start_index 0 --num_run 94 --multiplier 0.8 --dec_biased True --inc_unbiased True --balance_classes False
+
+torchrun --nproc_per_node 1 final_model_validation.py --ckpt_dir Meta-Llama-3-8B-Instruct/ --tokenizer_path Meta-Llama-3-8B-Instruct/tokenizer.model --max_seq_len 2048 --max_batch_size 3 --is_snli True --is_paft False --num_run 94
+
+torchrun --nproc_per_node 1 final_model_test.py --ckpt_dir Meta-Llama-3-8B-Instruct/ --tokenizer_path Meta-Llama-3-8B-Instruct/tokenizer.model --max_seq_len 2048 --max_batch_size 3 --is_snli True --is_paft False --num_run 94
+
+git add .
+git commit -m "Run 94 - SNLI, 10K samples, Upsample = 1x, LR = 2e-04/2e-05, Epochs = 2/3, multiplier=0.8, dec_bias & inc_unbias, run81 with 0.8"
+git push
+
+
+
+
+

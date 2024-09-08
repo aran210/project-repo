@@ -1,0 +1,26 @@
+#!/bin/bash
+#SBATCH --gres=gpu:teslaa40:1
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=au123
+
+
+cd /vol/bitbucket/au123/projectenv && source bin/activate && cd llama3
+
+cd ./BASS
+
+# Redirect all output and errors to a log file
+exec > >(tee -a simple_49_to_58.log) 2>&1
+
+
+
+
+
+torchrun --nproc_per_node 1 simple_classifier_train_custom.py --max_seq_len 2048 --max_batch_size 3 --num_training_samples 20000 --is_snli False --is_paft False --inc_bias True --num_epochs 3 --upsample_factor 2 --lr 2e-05 --start_index 0 --num_run 54 --is_halved_bias_set False --lower_samples True --biased_range 3000 --unbiased_range 19000 --should_balance True
+
+# torchrun --nproc_per_node 1 simple_classifier_validation.py--ckpt_dir Meta-Llama-3-8B-Instruct/ --tokenizer_path Meta-Llama-3-8B-Instruct/tokenizer.model --max_seq_len 2048 --max_batch_size 3 --is_snli False --is_paft False --num_run 54
+
+torchrun --nproc_per_node 1 simple_classifier_test.py --ckpt_dir Meta-Llama-3-8B-Instruct/ --tokenizer_path Meta-Llama-3-8B-Instruct/tokenizer.model --max_seq_len 2048 --max_batch_size 3 --is_snli False --is_paft False --num_run 54
+
+git add .
+git commit -m "SIMPLE CLASSIFIER: Run 54, MNLI, 20K Samples, Upsample=2x, LR=2e-05, balance, custom range 3k/19k*2"
+git push
