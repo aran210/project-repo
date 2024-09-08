@@ -8,7 +8,7 @@ The files outside these folders are either from the original Meta repo for LLaMA
 
 A lot of the files are redundant but demostrate some of the testing not shown in the report or presentation. I have kept quite a lot (although not the results as there were hundreds of messy files).
 
-The shell run_script files show an example of how I ran the code.
+The shell run_script files show an example of how I ran the code. If running the code, the output folders must be created beforehand, seeds set, and you must put in your own HuggingFace details.
 
 
 ## Download
